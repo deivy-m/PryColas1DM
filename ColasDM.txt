@@ -1,0 +1,35 @@
+Cola 
+-fifo(first in first out)
+-cuando se agregan elementos se agregan al final 
+-enqueue(item)-> añade un elemento
+-dequeue() -> retira y evuelve el elemento al frente de la cola
+-peek() -> muestra el elemento que esta primero en la cola sin eliminarlo
+-isEmpty() -> virifica si la cola esta vacia
+add(), offer(), desencolar->poll(), peek(), etc
+
+---------------------------------------------------------------------------------
+LinkedList-> implementa la interface Queue porporcionando una implmentacon de cola
+la cual se basa en una lista doblemente enlazada.
+-Tmb permite almacenar elementos nulos
+-flexible 
+
+---------------------------------------------------------------------------------
+PriorityQueue-> proporciona una cola donde los elementos se ordenan de acuado a su prioridad.
+-ordena de manera ascendente y el 1 tiene mayor prioridad
+-no cumple el principio fifo
+
+---------------------------------------------------------------------------------
+ArrayDeque-> propociona una cola basada en un arreglo dinamico(mayor eficiencia para adicion y eliminacion)
+-al ser n arreglo tiene indexacion 
+
+---------------------------------------------------------------------------------
+Uso de colas
+-Manejo de tareas->gestionar tareas en sistemas de procesamientos
+-Buffering->almacenar datos temporalmente mientras se transfieren de un lado a otro
+-Planificacion de procesos->las colas gestionan tareas y se planifica la ejcución de procesos
+
+---------------------------------------------------------------------------------
+
+Crear metodo para calcular que pague 50 por año 
+es decir si son 2025 son 50 año
+si 2024 son 100  
