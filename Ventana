@@ -1,0 +1,174 @@
+import javax.swing.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+
+public class Ventana {
+    private JPanel Principal;
+    private JTabbedPane tabbedPane1;
+
+    private JTextField txtID;
+    private JTextField txtNombre;
+    private JSpinner spnNumero;
+    private JComboBox cboEquipo;
+    private JTextField txtPuntaje;
+
+    private JComboBox cboBuscar;
+    private JButton btnBuscar;
+    private JButton btnordenar;
+
+    private JTextField txtID2;
+    private JTextField txtNombre2;
+    private JSpinner spnNumero2;
+    private JTextField txtPuntaje2;
+    private JComboBox cboEquipo2;
+    private JTextArea textArea2;
+
+    private JButton btnAgregar;
+    private JButton btnEditar;
+
+    private GestorJugadores gestor;
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Ventana");
+        frame.setContentPane(new Ventana().Principal);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+    }
+
+    public Ventana() {
+        gestor = new GestorJugadores();
+
+        // Mostrar jugadores iniciales
+        StringBuilder sb = new StringBuilder();
+        for (Jugador j : gestor.getJugadores()) {
+            sb.append(j.toString()).append("\n");
+        }
+        textArea2.setText(sb.toString());
+
+        // BOTÓN AGREGAR
+        btnAgregar.addActionListener(e -> {
+            try {
+                int id = Integer.parseInt(txtID.getText());
+                String nombre = txtNombre.getText();
+                int numero = (int) spnNumero.getValue();
+                int puntaje = Integer.parseInt(txtPuntaje.getText());
+                String equipo = (String) cboEquipo.getSelectedItem();
+
+                Jugador nuevo = new Jugador(id, nombre, numero, puntaje, equipo);
+                if (gestor.agregarJugador(nuevo)) {
+                    JOptionPane.showMessageDialog(null, "Jugador agregado correctamente.");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error: ID duplicado o puntaje inválido.");
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Verifica que ID y puntaje sean números.");
+            }
+        });
+
+        // BOTÓN BUSCAR
+        btnBuscar.addActionListener(e -> {
+            String equipo = (String) cboBuscar.getSelectedItem();
+            ArrayList<Jugador> resultado = gestor.buscarPorEquipo(equipo);
+            if (resultado.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No existen jugadores en ese equipo.");
+            } else {
+                StringBuilder salida = new StringBuilder();
+                for (Jugador j : resultado) {
+                    salida.append(j.toString()).append("\n");
+                }
+                textArea2.setText(salida.toString());
+            }
+        });
+
+        // BOTÓN ORDENAR
+        btnordenar.addActionListener(e -> {
+            gestor.ordenarPorId();
+            StringBuilder salida = new StringBuilder();
+            for (Jugador j : gestor.getJugadores()) {
+                salida.append(j.toString()).append("\n");
+            }
+            textArea2.setText(salida.toString());
+        });
+
+        // BOTÓN EDITAR
+        btnEditar.addActionListener(e -> {
+            try {
+                int id = Integer.parseInt(txtID2.getText());
+                String nombre = txtNombre2.getText();
+                int numero = (int) spnNumero2.getValue();
+                int puntaje = Integer.parseInt(txtPuntaje2.getText());
+                String equipo = (String) cboEquipo2.getSelectedItem();
+
+                boolean ok = gestor.editarJugadorPorId(id, nombre, numero, puntaje, equipo);
+                if (ok) {
+                    JOptionPane.showMessageDialog(null, "Jugador actualizado correctamente.");
+                } else {
+                    JOptionPane.showMessageDialog(null, "No se encontró el jugador con ese ID.");
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Verifica los datos ingresados.");
+            }
+        });
+    }
+}import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+public class GestorJugadores {
+    private ArrayList<Jugador> lista;
+
+    public GestorJugadores() {
+        lista = new ArrayList<>();
+        // Datos iniciales
+        lista.add(new Jugador(50, "DARIO", 1, 30, "COLOMBIA"));
+        lista.add(new Jugador(60, "CARLOS", 28, 150, "BRASIL"));
+        lista.add(new Jugador(30, "ALBERTO", 23, 40, "COLOMBIA"));
+        lista.add(new Jugador(80, "RAUL", 10, 80, "ARGENTINA"));
+    }
+
+    public ArrayList<Jugador> getJugadores() {
+        return lista;
+    }
+
+    public boolean agregarJugador(Jugador j) {
+        if (buscarPorId(j.getId()) != null) return false;
+        if (j.getPuntaje() <= 0 || j.getPuntaje() % 10 != 0) return false;
+        lista.add(j);
+        return true;
+    }
+
+    public Jugador buscarPorId(int id) {
+        for (Jugador j : lista) {
+            if (j.getId() == id) return j;
+        }
+        return null;
+    }
+
+    public ArrayList<Jugador> buscarPorEquipo(String equipo) {
+        ArrayList<Jugador> resultado = new ArrayList<>();
+        for (Jugador j : lista) {
+            if (j.getEquipo().equalsIgnoreCase(equipo)) {
+                j.setPuntaje(j.getPuntaje() + j.getPuntaje() / 2); // +50%
+                resultado.add(j);
+            }
+        }
+        return resultado;
+    }
+
+    public boolean editarJugadorPorId(int id, String nombre, int numero, int puntaje, String equipo) {
+        Jugador j = buscarPorId(id);
+        if (j != null) {
+            j.setNombre(nombre);
+            j.setNumero(numero);
+            j.setPuntaje(puntaje);
+            j.setEquipo(equipo);
+            return true;
+        }
+        return false;
+    }
+
+    public void ordenarPorId() {
+        Collections.sort(lista, Comparator.comparingInt(Jugador::getId));
+    }
+}
