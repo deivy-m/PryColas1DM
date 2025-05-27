@@ -172,3 +172,63 @@ public class GestorJugadores {
         Collections.sort(lista, Comparator.comparingInt(Jugador::getId));
     }
 }
+public float sumarPreciosRecursivo(String marca) {
+        return sumarRecursivo(marca, 0);
+    }
+
+    private float sumarRecursivo(String marca, int index) {
+        if (index >= lista.size()) return 0;
+        Automovil a = lista.get(index);
+        float suma = a.getMarca().equalsIgnoreCase(marca) ? a.getPrecio() : 0;
+        return suma + sumarRecursivo(marca, index + 1);
+    }
+
+GestionAutomoviles gestor = new GestionAutomoviles();
+
+public Ventana() {
+    initComponents();
+    txtIngreso.setText(gestor.listarAutomoviles()); // Mostrar iniciales
+}
+
+// Botón Agregar
+private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {
+    try {
+        int codigo = Integer.parseInt(txtCodigo.getText());
+        String marca = cboMarca.getSelectedItem().toString();
+        int cilindraje = Integer.parseInt(cboCilindraje.getSelectedItem().toString());
+        float precio = Float.parseFloat(txtPrecio.getText());
+
+        if (codigo < 100 || codigo > 999) {
+            JOptionPane.showMessageDialog(this, "Código debe ser de 3 cifras.");
+            return;
+        }
+        if (precio < 5000 || precio > 100000) {
+            JOptionPane.showMessageDialog(this, "Precio fuera de rango.");
+            return;
+        }
+
+        Automovil nuevo = new Automovil(codigo, marca, cilindraje, precio);
+        if (gestor.agregarAutomovil(nuevo)) {
+            txtIngreso.setText(gestor.listarAutomoviles());
+        } else {
+            JOptionPane.showMessageDialog(this, "Código ya existe.");
+        }
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Ingrese valores válidos.");
+    }
+}
+
+// Botón Separar y Ordenar
+private void btnSepararYOrdenarActionPerformed(java.awt.event.ActionEvent evt) {
+    String marcaSeleccionada = cboMarca2.getSelectedItem().toString();
+    txtSepararOrdenar.setText(gestor.separarYOrdenar(marcaSeleccionada));
+}
+
+// Botón Buscar y Sumar
+private void btnBuscarYSumarActionPerformed(java.awt.event.ActionEvent evt) {
+    String marca = cboMarcas3.getSelectedItem().toString();
+    float total = gestor.sumarPreciosRecursivo(marca);
+    txtPrecioTotal.setText("Total: $" + total);
+}
+
