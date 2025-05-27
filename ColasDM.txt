@@ -28,7 +28,36 @@ Uso de colas
 -Buffering->almacenar datos temporalmente mientras se transfieren de un lado a otro
 -Planificacion de procesos->las colas gestionan tareas y se planifica la ejcución de procesos
 
----------------------------------------------------------------------------------
+-------------------public String separarYOrdenar(String marcaSeleccionada) {
+    ArrayList<Automovil> filtrados = new ArrayList<>();
+
+    // Filtrar automóviles que NO son de la marca seleccionada
+    for (Automovil a : lista) {
+        if (!a.getMarca().equalsIgnoreCase(marcaSeleccionada)) {
+            filtrados.add(a);
+        }
+    }
+
+    // Ordenar por cilindraje con método burbuja
+    for (int i = 0; i < filtrados.size() - 1; i++) {
+        for (int j = 0; j < filtrados.size() - 1 - i; j++) {
+            if (filtrados.get(j).getCilindraje() > filtrados.get(j + 1).getCilindraje()) {
+                // Intercambio manual
+                Automovil temp = filtrados.get(j);
+                filtrados.set(j, filtrados.get(j + 1));
+                filtrados.set(j + 1, temp);
+            }
+        }
+    }
+
+    // Convertir a texto para mostrar
+    StringBuilder sb = new StringBuilder();
+    for (Automovil a : filtrados) {
+        sb.append(a.toString()).append("\n");
+    }
+
+    return sb.toString();
+}-------------------------------------------------------------
 
 Crear metodo para calcular que pague 50 por año 
 es decir si son 2025 son 50 año
