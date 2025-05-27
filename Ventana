@@ -231,4 +231,20 @@ private void btnBuscarYSumarActionPerformed(java.awt.event.ActionEvent evt) {
     float total = gestor.sumarPreciosRecursivo(marca);
     txtPrecioTotal.setText("Total: $" + total);
 }
+public float sumarPreciosRecursivo(String marca) {
+    return sumarDesdeInicio(marca, 0);
+}
 
+// Método auxiliar recursivo simple (solo índice, sin acumulador)
+private float sumarDesdeInicio(String marca, int i) {
+    if (i >= lista.size()) {
+        return 0;
+    } else {
+        Automovil a = lista.get(i);
+        if (a.getMarca().equalsIgnoreCase(marca)) {
+            return a.getPrecio() + sumarDesdeInicio(marca, i + 1);
+        } else {
+            return sumarDesdeInicio(marca, i + 1);
+        }
+    }
+}
